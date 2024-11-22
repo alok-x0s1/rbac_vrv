@@ -1,0 +1,54 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: "Rubik", sans-serif;
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	::-webkit-scrollbar {
+		@apply w-2;
+	}
+
+	::-webkit-scrollbar-track {
+		@apply bg-gray-100;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply bg-gray-300 rounded-md;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		@apply bg-gray-400;
+	}
+
+	::-webkit-scrollbar-thumb:active {
+		@apply bg-gray-500;
+	}
+
+	::-webkit-scrollbar-corner {
+		@apply bg-gray-100;
+	}
+
+	body {
+		@apply bg-gray-50 text-black;
+	}
+}
+
+.spinner {
+	width: "16px";
+	height: "16px";
+	border-top: "2px solid transparent";
+	border-right: "2px solid transparent";
+	border-bottom: "2px solid transparent";
+	border-left: "2px solid gray";
+	border-radius: "50%";
+	animation: "spin 1s linear infinite";
+}
