@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
-import { User } from "../../types/user";
-import axios from "../../utils/axios";
+import { User } from "../types/user";
+import axios from "../utils/axios";
 
 type AuthProvider = {
 	userData?: User | null;
