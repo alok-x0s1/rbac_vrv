@@ -15,7 +15,11 @@ export default function ProtectedRoute({
 	const navigate = useNavigate();
 
 	if (userData === undefined) {
-		return <div>Loading...</div>;
+		return (
+			<div className="text-center min-h-screen flex justify-center items-center text-4xl font-semibold">
+				Loading...
+			</div>
+		);
 	}
 
 	if (
