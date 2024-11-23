@@ -1,9 +1,12 @@
 import { ChevronRight } from "lucide-react";
 import Button from "../ui/Button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Hero() {
 	const navigate = useNavigate();
+	const { userData } = useAuth();
+
 	return (
 		<div className="bg-white">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -16,13 +19,23 @@ export default function Hero() {
 						powerful role-based access control system.
 					</p>
 					<div className="flex justify-center space-x-4">
-						<Button
-							label="Start Now"
-							className="px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 flex items-center duration-300"
-							onClick={() => navigate("/register")}
-						>
-							<ChevronRight className="ml-2 h-5 w-5" />
-						</Button>
+						{!userData ? (
+							<Button
+								label="Join Now"
+								className="px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 flex items-center duration-300"
+								onClick={() => navigate("/register")}
+							>
+								<ChevronRight className="ml-2 h-5 w-5" />
+							</Button>
+						) : (
+							<Button
+								label="Get Started"
+								className="px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 flex items-center duration-300"
+								onClick={() => navigate("/profile")}
+							>
+								<ChevronRight className="ml-2 h-5 w-5" />
+							</Button>
+						)}
 						<Button
 							label="View Demo"
 							className="px-8 py-3 border border-gray-300 rounded-lg hover:border-gray-400 text-gray-700 duration-300"

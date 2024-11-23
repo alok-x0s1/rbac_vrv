@@ -7,4 +7,7 @@ export type User = {
 	status: "active" | "inactive";
 	updatedAt: string;
 	_id: string;
+	blocked: boolean;
+
+	permissions: string[];
 };

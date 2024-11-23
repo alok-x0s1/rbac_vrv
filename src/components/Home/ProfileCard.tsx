@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { User } from "../../types/user";
 import { Check, Clock, Code, Copy, Mail, Shield } from "lucide-react";
+import { formatDateAndTime } from "../../utils/date";
 
 export default function ProfileCard(userData: User) {
 	const [showJsonView, setShowJsonView] = useState(false);
@@ -10,16 +11,6 @@ export default function ProfileCard(userData: User) {
 		navigator.clipboard.writeText(JSON.stringify(userData, null, 2));
 		setCopied(true);
 		setTimeout(() => setCopied(false), 2000);
-	};
-
-	const formatDate = (dateString: string) => {
-		return new Date(dateString).toLocaleString("en-US", {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-			hour: "2-digit",
-			minute: "2-digit",
-		});
 	};
 
 	return (
@@ -67,10 +58,12 @@ export default function ProfileCard(userData: User) {
 							<Clock className="h-5 w-5 text-gray-400" />
 							<div>
 								<p className="text-gray-700">
-									Created: {formatDate(userData.createdAt)}
+									Created:{" "}
+									{formatDateAndTime(userData.createdAt)}
 								</p>
 								<p className="text-gray-500 text-sm">
-									Updated: {formatDate(userData.updatedAt)}
+									Updated:{" "}
+									{formatDateAndTime(userData.updatedAt)}
 								</p>
 							</div>
 						</div>
