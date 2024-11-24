@@ -55,7 +55,7 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 			</div>
 
 			{filteredUsers.map((user) => (
-				<SettingsCard key={user._id} user={user} />
+				<SettingsCard key={user._id} user={user} fetchAllUsers={fetchAllUsers} />
 			))}
 		</div>
 	);

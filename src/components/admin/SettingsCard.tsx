@@ -4,9 +4,12 @@ import { formatDate } from "../../utils/date";
 import { useState } from "react";
 import { EllipsisVertical } from "lucide-react";
 import { AxiosError } from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "../ui/Button";
 
 interface SettingsCardProps {
 	user: User;
+	fetchAllUsers: () => void;
 }
 
 enum Action {
@@ -16,81 +19,89 @@ enum Action {
 	BAN_USER = "Ban User",
 	UNBAN_USER = "Unban User",
 	DELETE_USER = "Delete User",
+	SET_INACTIVE = "Set Inactive",
+	SET_ACTIVE = "Set Active",
 }
 
-export default function SettingsCard({ user }: SettingsCardProps) {
-	const [error, setError] = useState<string | null>(null);
+export default function SettingsCard({
+	user,
+	fetchAllUsers,
+}: SettingsCardProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const { toast } = useToast();
 
 	const handleMenuClick = async (action: string) => {
 		try {
-			setError(null);
-			let response;
 			const userId = user._id;
 
 			switch (action) {
 				case Action.MAKE_ADMIN:
-					response = await axios.patch(
+					await axios.patch(
 						`/admin/change-role/${userId}?role=administrator`
 					);
 					break;
 
 				case Action.MAKE_USER:
-					response = await axios.patch(
-						`/admin/change-role/${userId}?role=user`
-					);
+					await axios.patch(`/admin/change-role/${userId}?role=user`);
 					break;
 
 				case Action.MAKE_MODERATOR:
-					response = await axios.patch(
+					await axios.patch(
 						`/admin/change-role/${userId}?role=moderator`
 					);
 					break;
 
 				case Action.BAN_USER:
-					response = await axios.patch(`/admin/${userId}`);
+					await axios.patch(`/admin/${userId}`);
 					break;
 
 				case Action.UNBAN_USER:
-					response = await axios.patch(`/admin/${userId}`);
+					await axios.patch(`/admin/${userId}`);
+					break;
+
+				case Action.SET_INACTIVE:
+					await axios.patch(`/admin/change-status/${userId}`, {
+						status: "inactive",
+					});
+					break;
+
+				case Action.SET_ACTIVE:
+					await axios.patch(`/admin/change-status/${userId}`, {
+						status: "active",
+					});
 					break;
 
 				case Action.DELETE_USER:
-					response = await axios.delete(`/admin/${userId}`);
+					await axios.delete(`/admin/${userId}`);
 					break;
 
 				default:
 					throw new Error("Unknown action");
 			}
-
-			console.log(`${action} successful`, response.data);
-			setError(null);
 		} catch (err) {
 			console.error(err);
 			if (err instanceof AxiosError) {
-				setError(
-					err.response?.data?.message ||
-						`Failed to ${action.toLowerCase()} for ${user.name}`
-				);
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: err.response?.data.message,
+				});
 			} else {
-				setError("An unexpected error occurred.");
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: "Something went wrong",
+				});
 			}
 		} finally {
 			setIsMenuOpen(false);
+			fetchAllUsers();
 		}
 	};
 
 	return (
-		<div className="bg-white rounded-lg p-4 shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 relative mb-2">
-			{error && (
-				<div
-					className="absolute top-2 right-2 bg-red-50 border border-red-400 text-red-600 px-4 py-2 rounded-md shadow-md z-50"
-					role="alert"
-				>
-					<span>{error}</span>
-				</div>
-			)}
-
+		<div className="bg-white rounded-lg p-4 shadow-md border-r border-b hover:border-gray-500 hover:shadow-lg transition-all duration-300 relative mb-2">
 			<div className="flex flex-wrap items-center gap-4">
 				<img
 					src={user.avatar}
@@ -158,7 +169,7 @@ export default function SettingsCard({ user }: SettingsCardProps) {
 					/>
 					{isMenuOpen && (
 						<div className="absolute right-0 mt-2 bg-white shadow-lg border border-gray-200 rounded-md w-40 z-50">
-							<button
+							<Button
 								onClick={() =>
 									handleMenuClick(
 										user.role === "administrator"
@@ -166,13 +177,14 @@ export default function SettingsCard({ user }: SettingsCardProps) {
 											: Action.MAKE_ADMIN
 									)
 								}
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								variant="outline"
+								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
 							>
 								{user.role === "administrator"
 									? "Revoke Admin"
 									: "Make Admin"}
-							</button>
-							<button
+							</Button>
+							<Button
 								onClick={() =>
 									handleMenuClick(
 										user.role === "moderator"
@@ -180,13 +192,14 @@ export default function SettingsCard({ user }: SettingsCardProps) {
 											: Action.MAKE_MODERATOR
 									)
 								}
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								variant="outline"
+								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
 							>
 								{user.role === "moderator"
 									? "Revoke Moderator"
 									: "Make Moderator"}
-							</button>
-							<button
+							</Button>
+							<Button
 								onClick={() =>
 									handleMenuClick(
 										user.blocked === true
@@ -194,20 +207,39 @@ export default function SettingsCard({ user }: SettingsCardProps) {
 											: Action.BAN_USER
 									)
 								}
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								variant="outline"
+								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
 							>
 								{user.blocked === true
 									? "Unban User"
 									: "Ban User"}
-							</button>
-							<button
+							</Button>
+
+							<Button
+								variant="outline"
+								onClick={() =>
+									handleMenuClick(
+										user.status === "active"
+											? Action.SET_INACTIVE
+											: Action.SET_ACTIVE
+									)
+								}
+								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
+							>
+								{user.status === "active"
+									? "Deactivate User"
+									: "Activate User"}
+							</Button>
+
+							<Button
 								onClick={() =>
 									handleMenuClick(Action.DELETE_USER)
 								}
 								className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+								variant="link"
 							>
 								Delete User
-							</button>
+							</Button>
 						</div>
 					)}
 				</div>
