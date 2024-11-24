@@ -9,7 +9,7 @@ const SidebarContext = createContext<SidebarProvider | undefined>(undefined);
 
 type SidebarProviderProps = PropsWithChildren;
 
-export const SidebarProvider = ({ children }: SidebarProviderProps) => {
+export default function SidebarProvider({ children }: SidebarProviderProps) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -18,6 +18,6 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
 			{children}
 		</SidebarContext.Provider>
 	);
-};
+}
 
-export default SidebarContext;
+export { SidebarContext };

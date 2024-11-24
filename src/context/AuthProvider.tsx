@@ -5,7 +5,6 @@ import axios from "../utils/axios";
 type AuthProvider = {
 	userData?: User | null;
 	getProfile: () => Promise<void>;
-	handleLogout: () => Promise<void>;
 };
 
 type AuthProviderProps = PropsWithChildren;
@@ -30,17 +29,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 		getProfile();
 	}, []);
 
-	async function handleLogout() {
-		try {
-			await axios.post("/users/logout");
-			setUserData(null);
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
 	return (
-		<AuthContext.Provider value={{ userData, getProfile, handleLogout }}>
+		<AuthContext.Provider value={{ userData, getProfile }}>
 			{children}
 		</AuthContext.Provider>
 	);
