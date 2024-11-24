@@ -1,12 +1,22 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 type AuthLayoutProps = PropsWithChildren;
 
 export default function AuthRoute({ children }: AuthLayoutProps) {
-	const { userData } = useAuth();
+	const { userData, getProfile } = useAuth();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		getProfile();
+	}, [getProfile]);
+
+	useEffect(() => {
+		if (userData) {
+			navigate("/profile");
+		}
+	}, [userData, navigate]);
 
 	if (userData === undefined) {
 		return (
@@ -14,10 +24,6 @@ export default function AuthRoute({ children }: AuthLayoutProps) {
 				Loading...
 			</div>
 		);
-	}
-
-	if (userData) {
-		navigate("/profile");
 	}
 
 	return <>{children}</>;

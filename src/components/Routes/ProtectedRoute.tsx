@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { User } from "@/types/user";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 type ProtectedRouteProps = PropsWithChildren & {
@@ -11,8 +11,22 @@ export default function ProtectedRoute({
 	allowedRoles,
 	children,
 }: ProtectedRouteProps) {
-	const { userData } = useAuth();
+	const { userData, getProfile } = useAuth();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		getProfile();
+	}, []);
+
+	useEffect(() => {
+		if (userData !== undefined && userData !== null) {
+			if (!allowedRoles.includes(userData.role)) {
+				navigate("/register");
+			}
+		} else if (userData === null) {
+			navigate("/register");
+		}
+	}, [userData, allowedRoles, navigate]);
 
 	if (userData === undefined) {
 		return (
@@ -20,13 +34,6 @@ export default function ProtectedRoute({
 				Loading...
 			</div>
 		);
-	}
-
-	if (
-		userData === null ||
-		(allowedRoles && !allowedRoles.includes(userData.role))
-	) {
-		navigate("/register");
 	}
 
 	return <>{children}</>;

@@ -2,7 +2,7 @@ import axios from "../../utils/axios";
 import { User } from "../../types/user";
 import { formatDate } from "../../utils/date";
 import { useState } from "react";
-import { EllipsisVertical } from "lucide-react";
+import { Check, EllipsisVertical, PenLine } from "lucide-react";
 import { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/Button";
@@ -28,13 +28,39 @@ export default function SettingsCard({
 	fetchAllUsers,
 }: SettingsCardProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [editingName, setEditingName] = useState(false);
+	const [newName, setNewName] = useState<string>(user.name);
 
 	const { toast } = useToast();
+	const userId = user._id;
+
+	const handleNameChange = async () => {
+		try {
+			const response = await axios.patch(`/admin/update-user/${userId}`, {
+				name: newName,
+			});
+			if (response.status === 200) {
+				user.name = newName;
+				setEditingName(false);
+
+				toast({
+					title: "Success",
+					description: "Name updated successfully",
+				});
+			}
+		} catch (error) {
+			if (error instanceof Error) {
+				toast({
+					variant: "destructive",
+					title: "Error",
+					description: error.message,
+				});
+			}
+		}
+	};
 
 	const handleMenuClick = async (action: string) => {
 		try {
-			const userId = user._id;
-
 			switch (action) {
 				case Action.MAKE_ADMIN:
 					await axios.patch(
@@ -80,7 +106,6 @@ export default function SettingsCard({
 					throw new Error("Unknown action");
 			}
 		} catch (err) {
-			console.error(err);
 			if (err instanceof AxiosError) {
 				toast({
 					variant: "destructive",
@@ -110,7 +135,35 @@ export default function SettingsCard({
 				/>
 
 				<div className="flex-1 min-w-[150px]">
-					<h3 className="font-semibold text-gray-900">{user.name}</h3>
+					<h2 className="text-xl font-semibold text-gray-900 w-full flex items-center">
+						{editingName ? (
+							<input
+								type="text"
+								value={newName}
+								onChange={(e) => setNewName(e.target.value)}
+								className="text-xl font-semibold text-gray-900 w-full bg-transparent border-b border-gray-400 focus:outline-none"
+							/>
+						) : (
+							user.name
+						)}
+
+						<span>
+							{editingName ? (
+								<Check
+									className="h-5 w-5 text-gray-400 ml-6 cursor-pointer"
+									onClick={() => {
+										setEditingName(!editingName);
+										handleNameChange();
+									}}
+								/>
+							) : (
+								<PenLine
+									className="h-4 w-4 text-gray-400 ml-6 cursor-pointer"
+									onClick={() => setEditingName(!editingName)}
+								/>
+							)}
+						</span>
+					</h2>
 					<p className="text-sm text-gray-500">{user.email}</p>
 				</div>
 
@@ -230,7 +283,6 @@ export default function SettingsCard({
 									? "Deactivate User"
 									: "Activate User"}
 							</Button>
-
 							<Button
 								onClick={() =>
 									handleMenuClick(Action.DELETE_USER)

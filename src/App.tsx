@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Admin, Home, NotFound, Profile, Register } from "./Pages";
-import { ProtectedRoute } from "./components/Routes";
+import { AuthRoute, ProtectedRoute } from "./components/Routes";
 import { Toaster } from "@/components/ui/toaster";
 
 function App() {
@@ -14,7 +14,14 @@ function App() {
 				{/* Application routes */}
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/register" element={<Register />} />
+					<Route
+						path="/register"
+						element={
+							<AuthRoute>
+								<Register />
+							</AuthRoute>
+						}
+					/>
 					<Route
 						path="/profile"
 						element={

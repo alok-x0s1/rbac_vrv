@@ -22,8 +22,8 @@ export default function Admin() {
 			setIsLoading(true);
 			const res = await axios.get("/admin/users");
 			setUsers(res.data.users);
-		} catch (error) {
-			console.error("Failed to fetch users:", error);
+		} catch {
+			navigate("/");
 		} finally {
 			setIsLoading(false);
 		}

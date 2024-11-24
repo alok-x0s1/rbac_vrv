@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useState } from "react";
 import { User } from "../types/user";
 import axios from "../utils/axios";
 
@@ -18,16 +18,10 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 		try {
 			const res = await axios.get("/profile");
 			setUserData(res.data.data);
-		} catch (error) {
-			if (axios.isAxiosError(error))
-				console.log(error.response?.data.message);
+		} catch {
 			setUserData(null);
 		}
 	}
-
-	useEffect(() => {
-		getProfile();
-	}, []);
 
 	return (
 		<AuthContext.Provider value={{ userData, getProfile }}>
