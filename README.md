@@ -4,6 +4,23 @@ A React-based RBAC system for managing user roles and permissions. This project 
 
 [Live Demo](https://rbac-alok.vercel.app)
 
+```js
+For Administrator
+
+Email: administrator@vrv.com
+Password: VRV12345
+
+For Moderator
+
+Email: moderator@vrv.com
+Password: VRV12345
+
+For User
+
+Email: user@vrv.com
+Password: VRV12345
+```
+
 ## Features
 
 ### Role Management
