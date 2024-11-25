@@ -53,10 +53,10 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 	};
 
 	return (
-		<div className="p-2 pb-6 pl-10">
-			<div className="flex items-start mb-6 justify-between">
+		<div className="p-3 pb-6 pl-6">
+			<div className="flex items-start mb-6 justify-between flex-col md:flex-row gap-2">
 				<div>
-					<h1 className="text-2xl font-bold text-gray-900">
+					<h1 className="text-2xl pl-4 font-bold text-gray-900">
 						All Members
 						<span className="text-gray-600 ml-2">
 							({filteredUsers.length})
@@ -64,8 +64,8 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 					</h1>
 				</div>
 
-				<div className="flex gap-4">
-					<div className="relative w-96">
+				<div className="flex gap-4 mt-4 sm:mt-0">
+					<div className="relative w-full sm:w-96">
 						<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
 						<input
 							type="text"
@@ -85,7 +85,7 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 				</div>
 			</div>
 
-			<div className="flex gap-4 mb-4">
+			<div className="flex flex-wrap gap-4 mb-4">
 				<Select
 					onValueChange={(selectedRole) =>
 						setSelectedRole(selectedRole)
@@ -102,9 +102,7 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 							<SelectItem value="moderator">
 								Moderators
 							</SelectItem>
-							<SelectItem value="admin">
-								Admininstrator
-							</SelectItem>
+							<SelectItem value="administrator">Administrator</SelectItem>
 						</SelectGroup>
 					</SelectContent>
 				</Select>
@@ -137,7 +135,7 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 				/>
 			))}
 
-			<div className="flex justify-between items-center mt-6">
+			<div className="flex flex-wrap gap-2 justify-between items-center mt-6">
 				<Button
 					onClick={() => handlePageChange(currentPage - 1)}
 					disabled={currentPage === 1}
@@ -149,14 +147,14 @@ export default function Settings({ users, fetchAllUsers }: SettingsProps) {
 					<ArrowLeft className="mr-1" /> Previous
 				</Button>
 
-				<span className="text-gray-700">
+				<span className="text-gray-700 mt-4 sm:mt-0">
 					Page {currentPage} of {totalPages}
 				</span>
 
 				<Button
 					onClick={() => handlePageChange(currentPage + 1)}
 					disabled={currentPage === totalPages}
-					className={` ${
+					className={`${
 						currentPage === totalPages
 							? "opacity-50 cursor-not-allowed"
 							: "hover:bg-gray-50"

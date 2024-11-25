@@ -2,6 +2,7 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 
 type SidebarProvider = {
 	isSidebarOpen: boolean;
+	setIsSidebarOpen: (value: boolean) => void;
 	toggleSidebar: () => void;
 };
 
@@ -20,7 +21,9 @@ export default function SidebarProvider({ children }: SidebarProviderProps) {
 	}, []);
 
 	return (
-		<SidebarContext.Provider value={{ isSidebarOpen, toggleSidebar }}>
+		<SidebarContext.Provider
+			value={{ isSidebarOpen, setIsSidebarOpen, toggleSidebar }}
+		>
 			{children}
 		</SidebarContext.Provider>
 	);

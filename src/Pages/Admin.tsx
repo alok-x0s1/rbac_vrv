@@ -48,9 +48,9 @@ export default function Admin() {
 				}`}
 			>
 				{activeView === "normal" && (
-					<div className="w-full p-2 pl-10">
+					<div className="w-full p-3 pl-6">
 						<div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-							<div>
+							<div className="pl-4">
 								<h1 className="text-2xl font-bold text-gray-900">
 									User Management
 								</h1>

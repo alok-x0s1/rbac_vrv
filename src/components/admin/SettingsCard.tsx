@@ -60,6 +60,7 @@ export default function SettingsCard({
 	};
 
 	const handleMenuClick = async (action: string) => {
+		setIsMenuOpen(false);
 		try {
 			switch (action) {
 				case Action.MAKE_ADMIN:
@@ -105,6 +106,11 @@ export default function SettingsCard({
 				default:
 					throw new Error("Unknown action");
 			}
+
+			toast({
+				title: "Success",
+				description: "User updated successfully",
+			});
 		} catch (err) {
 			if (err instanceof AxiosError) {
 				toast({
@@ -127,48 +133,52 @@ export default function SettingsCard({
 
 	return (
 		<div className="bg-white rounded-lg p-4 shadow-md border-r border-b hover:border-gray-500 hover:shadow-lg transition-all duration-300 relative mb-2">
-			<div className="flex flex-wrap items-center gap-4">
-				<img
-					src={user.avatar}
-					alt={user.name}
-					className="w-14 h-14 rounded-full object-cover border-2 border-gray-100"
-				/>
+			<div className="flex flex-wrap items-center gap-4 justify-between">
+				<div className="flex items-center flex-wrap gap-4">
+					<img
+						src={user.avatar}
+						alt={user.name}
+						className="w-14 h-14 rounded-full object-cover border-2 border-gray-100"
+					/>
 
-				<div className="flex-1 min-w-[150px]">
-					<h2 className="text-xl font-semibold text-gray-900 w-full flex items-center">
-						{editingName ? (
-							<input
-								type="text"
-								value={newName}
-								onChange={(e) => setNewName(e.target.value)}
-								className="text-xl font-semibold text-gray-900 w-full bg-transparent border-b border-gray-400 focus:outline-none"
-							/>
-						) : (
-							user.name
-						)}
-
-						<span>
+					<div className="md:min-w-[150px]">
+						<h2 className="text-xl font-semibold text-gray-900 w-full flex items-center">
 							{editingName ? (
-								<Check
-									className="h-5 w-5 text-gray-400 ml-6 cursor-pointer"
-									onClick={() => {
-										setEditingName(!editingName);
-										handleNameChange();
-									}}
+								<input
+									type="text"
+									value={newName}
+									onChange={(e) => setNewName(e.target.value)}
+									className="text-xl font-semibold text-gray-900 w-full bg-transparent border-b border-gray-400 focus:outline-none"
 								/>
 							) : (
-								<PenLine
-									className="h-4 w-4 text-gray-400 ml-6 cursor-pointer"
-									onClick={() => setEditingName(!editingName)}
-								/>
+								user.name
 							)}
-						</span>
-					</h2>
-					<p className="text-sm text-gray-500">{user.email}</p>
+
+							<span>
+								{editingName ? (
+									<Check
+										className="h-5 w-5 text-gray-400 ml-6 cursor-pointer"
+										onClick={() => {
+											setEditingName(!editingName);
+											handleNameChange();
+										}}
+									/>
+								) : (
+									<PenLine
+										className="h-4 w-4 text-gray-400 ml-6 cursor-pointer"
+										onClick={() =>
+											setEditingName(!editingName)
+										}
+									/>
+								)}
+							</span>
+						</h2>
+						<p className="text-sm text-gray-500">{user.email}</p>
+					</div>
 				</div>
 
-				<div className="flex items-center gap-2">
-					<span
+				<div className="flex items-center gap-2 flex-wrap">
+					<div
 						className={`text-xs font-medium px-3 py-1 rounded-full border ${
 							user.role === "administrator"
 								? "bg-red-50 text-red-600 border-red-400"
@@ -178,11 +188,9 @@ export default function SettingsCard({
 						}`}
 					>
 						{user.role}
-					</span>
-				</div>
+					</div>
 
-				<div>
-					<span
+					<div
 						className={`text-xs font-medium px-3 py-1 rounded-full border ${
 							user.status === "active"
 								? "bg-green-50 text-green-600 border-green-400"
@@ -190,110 +198,110 @@ export default function SettingsCard({
 						}`}
 					>
 						{user.status}
-					</span>
-				</div>
+					</div>
 
-				{user.blocked && (
-					<div>
-						<span
+					{user.blocked && (
+						<div
 							className={`text-xs font-medium px-3 py-1 rounded-full border text-red-500 border-red-500`}
 						>
 							Blocked
-						</span>
-					</div>
-				)}
-
-				<div className="flex-1 min-w-[150px]">
-					<p className="text-sm text-blue-500 truncate">
-						{user.permissions.length > 0
-							? user.permissions.join(", ")
-							: "No permissions"}
-					</p>
-				</div>
-
-				<div className="text-sm text-gray-600">
-					{formatDate(user.createdAt)}
-				</div>
-
-				<div className="relative">
-					<EllipsisVertical
-						className="h-6 w-6 text-gray-500 hover:text-gray-700 cursor-pointer"
-						onClick={() => setIsMenuOpen(!isMenuOpen)}
-					/>
-					{isMenuOpen && (
-						<div className="absolute right-0 mt-2 bg-white shadow-lg border border-gray-200 rounded-md w-40 z-50">
-							<Button
-								onClick={() =>
-									handleMenuClick(
-										user.role === "administrator"
-											? Action.MAKE_USER
-											: Action.MAKE_ADMIN
-									)
-								}
-								variant="outline"
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
-							>
-								{user.role === "administrator"
-									? "Revoke Admin"
-									: "Make Admin"}
-							</Button>
-							<Button
-								onClick={() =>
-									handleMenuClick(
-										user.role === "moderator"
-											? Action.MAKE_USER
-											: Action.MAKE_MODERATOR
-									)
-								}
-								variant="outline"
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
-							>
-								{user.role === "moderator"
-									? "Revoke Moderator"
-									: "Make Moderator"}
-							</Button>
-							<Button
-								onClick={() =>
-									handleMenuClick(
-										user.blocked === true
-											? Action.UNBAN_USER
-											: Action.BAN_USER
-									)
-								}
-								variant="outline"
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
-							>
-								{user.blocked === true
-									? "Unban User"
-									: "Ban User"}
-							</Button>
-
-							<Button
-								variant="outline"
-								onClick={() =>
-									handleMenuClick(
-										user.status === "active"
-											? Action.SET_INACTIVE
-											: Action.SET_ACTIVE
-									)
-								}
-								className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
-							>
-								{user.status === "active"
-									? "Deactivate User"
-									: "Activate User"}
-							</Button>
-							<Button
-								onClick={() =>
-									handleMenuClick(Action.DELETE_USER)
-								}
-								className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-								variant="link"
-							>
-								Delete User
-							</Button>
 						</div>
 					)}
+
+					<div className="flex-1 min-w-[150px]">
+						<p className="text-sm text-blue-500 truncate underline">
+							{user.permissions.length > 0
+								? user.permissions.join(", ")
+								: "No permissions"}
+						</p>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-2">
+					<div className="text-sm text-gray-600">
+						{formatDate(user.createdAt)}
+					</div>
+
+					<div className="relative">
+						<EllipsisVertical
+							className="h-6 w-6 text-gray-500 hover:text-gray-700 cursor-pointer"
+							onClick={() => setIsMenuOpen(!isMenuOpen)}
+						/>
+						{isMenuOpen && (
+							<div className="absolute right-0 mt-2 bg-white shadow-lg border border-gray-200 rounded-md w-40 z-50">
+								<Button
+									onClick={() =>
+										handleMenuClick(
+											user.role === "administrator"
+												? Action.MAKE_USER
+												: Action.MAKE_ADMIN
+										)
+									}
+									variant="outline"
+									className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
+								>
+									{user.role === "administrator"
+										? "Revoke Admin"
+										: "Make Admin"}
+								</Button>
+								<Button
+									onClick={() =>
+										handleMenuClick(
+											user.role === "moderator"
+												? Action.MAKE_USER
+												: Action.MAKE_MODERATOR
+										)
+									}
+									variant="outline"
+									className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
+								>
+									{user.role === "moderator"
+										? "Revoke Moderator"
+										: "Make Moderator"}
+								</Button>
+								<Button
+									onClick={() =>
+										handleMenuClick(
+											user.blocked === true
+												? Action.UNBAN_USER
+												: Action.BAN_USER
+										)
+									}
+									variant="outline"
+									className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
+								>
+									{user.blocked === true
+										? "Unban User"
+										: "Ban User"}
+								</Button>
+
+								<Button
+									variant="outline"
+									onClick={() =>
+										handleMenuClick(
+											user.status === "active"
+												? Action.SET_INACTIVE
+												: Action.SET_ACTIVE
+										)
+									}
+									className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 border-none font-normal"
+								>
+									{user.status === "active"
+										? "Deactivate User"
+										: "Activate User"}
+								</Button>
+								<Button
+									onClick={() =>
+										handleMenuClick(Action.DELETE_USER)
+									}
+									className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+									variant="link"
+								>
+									Delete User
+								</Button>
+							</div>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

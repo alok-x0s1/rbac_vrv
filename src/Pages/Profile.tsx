@@ -10,18 +10,20 @@ export default function Profile() {
 
 	useEffect(() => {
 		getProfile();
-	}, [getProfile]);
+	});
 
 	return (
 		<div className="min-h-screen flex justify-center items-center">
 			{userData?.role === "moderator" ||
 			userData?.role === "administrator" ? (
-				<Button
-					onClick={() => navigate("/admin")}
-					className="fixed top-4 right-4"
-				>
-					Dashboard
-				</Button>
+				<div className="flex gap-4 fixed top-4 right-4">
+					<Button onClick={() => navigate("/")} variant="outline">
+						Home
+					</Button>
+					<Button onClick={() => navigate("/admin")}>
+						Dashboard
+					</Button>
+				</div>
 			) : (
 				""
 			)}

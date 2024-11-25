@@ -10,13 +10,13 @@ export default function AuthRoute({ children }: AuthLayoutProps) {
 
 	useEffect(() => {
 		getProfile();
-	}, [getProfile]);
+	});
 
 	useEffect(() => {
-		if (userData) {
+		if (userData !== undefined && userData !== null) {
 			navigate("/profile");
 		}
-	}, [userData, navigate]);
+	});
 
 	if (userData === undefined) {
 		return (

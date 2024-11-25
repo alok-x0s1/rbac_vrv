@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { User } from "../../types/user";
-import { Check, Clock, Code, Copy, Edit, Mail, Shield } from "lucide-react";
+import { Check, Clock, Code, Copy, Edit, FileBadge, Mail, Shield } from "lucide-react";
 import { formatDateAndTime } from "../../utils/date";
 import axios from "../../utils/axios";
 import { useToast } from "@/hooks/use-toast";
@@ -45,7 +45,7 @@ export default function ProfileCard({ userData }: { userData: User }) {
 	};
 
 	return (
-		<div className="bg-white shadow-sm rounded-xl overflow-hidden max-w-xl mx-auto">
+		<div className="bg-white shadow-sm rounded-xl overflow-hidden max-w-3xl mx-auto">
 			<div className="p-4 flex justify-end">
 				<button
 					onClick={() => setShowJsonView(!showJsonView)}
@@ -58,14 +58,14 @@ export default function ProfileCard({ userData }: { userData: User }) {
 
 			{!showJsonView ? (
 				<div className="p-6">
-					<div className="flex items-center space-x-4 mb-6">
+					<div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 mb-6">
 						<img
 							src={userData.avatar}
 							alt={userData.name}
-							className="w-16 h-16 rounded-full border-2 border-gray-200 object-cover"
+							className="w-20 h-20 md:w-16 md:h-16 rounded-full border-2 border-gray-200 object-cover"
 						/>
-						<div>
-							<h2 className="text-xl font-semibold text-gray-900 w-full flex items-center">
+						<div className="text-center md:text-left">
+							<h2 className="text-xl font-semibold text-gray-900 flex justify-center md:justify-start items-center">
 								{editingName ? (
 									<input
 										type="text"
@@ -117,6 +117,12 @@ export default function ProfileCard({ userData }: { userData: User }) {
 							</span>
 						</div>
 						<div className="flex items-center space-x-3">
+							<FileBadge className="h-5 w-5 text-gray-400" />
+							<span className="text-gray-700 capitalize">
+								{userData.role}
+							</span>
+						</div>
+						<div className="flex items-center space-x-3">
 							<Clock className="h-5 w-5 text-gray-400" />
 							<div>
 								<p className="text-gray-700">
@@ -132,7 +138,7 @@ export default function ProfileCard({ userData }: { userData: User }) {
 					</div>
 				</div>
 			) : (
-				<div className="p-6 rounded-lg shadow-sm">
+				<div className="p-2">
 					<div className="flex justify-between items-center mb-4">
 						<h3 className="text-lg font-semibold text-gray-900">
 							User Information
@@ -149,11 +155,11 @@ export default function ProfileCard({ userData }: { userData: User }) {
 							)}
 						</button>
 					</div>
-					<div className="bg-white p-4 rounded-lg text-base text-gray-700 border border-gray-300">
+					<div className="bg-white p-2 sm:p-4 rounded-md text-xs md:text-sm sm:text-base text-gray-700 border border-gray-300">
 						<p className="text-gray-900">{"{"}</p>
 						{Object.entries(userData).map(
 							([key, value], index, array) => (
-								<p key={key} className="ml-4">
+								<p key={key} className="ml-3 sm:ml-4">
 									<span className="text-gray-800 font-semibold">
 										{key}
 									</span>

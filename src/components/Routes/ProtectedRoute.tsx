@@ -16,7 +16,7 @@ export default function ProtectedRoute({
 
 	useEffect(() => {
 		getProfile();
-	}, []);
+	});
 
 	useEffect(() => {
 		if (userData !== undefined && userData !== null) {

@@ -1,3 +1,5 @@
+import { Button } from "../ui/Button";
+
 export default function Cta() {
 	return (
 		<div className="bg-white">
@@ -10,9 +12,9 @@ export default function Cta() {
 						Get started with our RBAC solution today and take
 						control of your application's security.
 					</p>
-					<button className="px-6 sm:px-8 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 duration-300">
-						Get Started Free
-					</button>
+					<Button variant="outline">
+						Get Started
+					</Button>
 				</div>
 			</div>
 		</div>

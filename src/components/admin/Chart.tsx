@@ -40,7 +40,7 @@ const ChartsView: React.FC<RoleDistributionChartProps> = ({ users }) => {
 	const lineColors = ["#1E90FF", "#32CD32", "#FFD700"];
 
 	return (
-		<div className="bg-gray-50 p-2 rounded-lg shadow-md pl-9">
+		<div className="bg-gray-50 p-3 rounded-lg shadow-md pl-9">
 			<h2 className="text-2xl font-bold mb-6">User Role Distribution</h2>
 
 			<div className="mb-6">

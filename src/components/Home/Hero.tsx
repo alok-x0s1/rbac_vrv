@@ -20,21 +20,30 @@ export default function Hero() {
 					</p>
 					<div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
 						{!userData ? (
-							<Button onClick={() => navigate("/register")}>
-								Join Now
-								<ChevronRight className="ml-2 h-5 w-5" />
-							</Button>
-						) : (
-							<Button onClick={() => navigate("/profile")}>
-								Get Started
-								<ChevronRight className="ml-2 h-5 w-5" />
-							</Button>
-						)}
+							<>
+								<Button onClick={() => navigate("/register")}>
+									Join Now
+									<ChevronRight className="ml-2 h-5 w-5" />
+								</Button>
 
-						<Button onClick={() => navigate("/admin")}>
-							Dashboard
-							<ChevronRight className="ml-2 h-5 w-5" />
-						</Button>
+								<Button
+									onClick={() => navigate("/explore")}
+								>
+									Explore
+								</Button>
+							</>
+						) : (
+							<>
+								<Button onClick={() => navigate("/profile")}>
+									Get Started
+									<ChevronRight className="ml-2 h-5 w-5" />
+								</Button>
+
+								<Button onClick={() => navigate("/admin")}>
+									Dashboard
+								</Button>
+							</>
+						)}
 					</div>
 				</div>
 			</div>

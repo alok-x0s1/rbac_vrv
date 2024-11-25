@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/Button";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
@@ -11,12 +12,13 @@ const NotFound = () => {
 				It might have been moved or deleted.
 			</p>
 			<div className="mt-6">
-				<Link
-					to="/"
-					className="inline-block px-6 py-2 bg-gray-900 text-white text-lg font-semibold rounded-md hover:bg-gray-800 focus:outline-none"
-				>
-					Go back
-				</Link>
+				<Button>
+					<Link
+						to="/"
+					>
+						Go back
+					</Link>
+				</Button>
 			</div>
 		</div>
 	);
